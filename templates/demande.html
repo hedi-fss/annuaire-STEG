@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block body %}
+{% if requests %}
+  <h3>Gérer les demandes de changement de téléphone</h3>
+  <table width="100%" cellspacing="0" cellpadding="5">
+    <thead>
+        <th>Id</th>
+        <th>Matricule</th>
+        <th>Nom</th>
+        <th>Numéro de téléphone</th>
+        <th>Status</th>
+    </thead>
+  {% for request in requests %}
+    <tr>
+        <td>{{ request.Id }}</td>
+        <td>{{ request.matricule }}</td>
+        <td>{{ request.user.nom }}</td>
+        <td>{{ request.tel }}</td>
+        <td>{{ request.status }}</td>
+        {% if request.status=='pending' %}
+          <td>
+              <form method="GET" action="/handle-request/{{ request.Id }}/Acceptation" style="display:inline;">
+                <button type="submit">Accepter</button>
+              </form>
+          </td>
+          <td>
+              <form method="POST" action="/handle-request/{{ request.Id }}/Refus" style="display:inline;">
+                <button type="submit">Refuser</button>
+              </form>
+          </td>
+        {% endif %}
+    </tr>
+  {% endfor %}
+  </table>
+  <p>{{ info_tel }}</p>
+{%else%}
+<h3>Pas de demandes de changement de téléphone en attente</h3>
+{% endif %}
+<br><br>
+<form method="post" action="/return-dashboard"><button type="submit" class="retour">&#128281; Retour</button></form>
+<form method="post" action="/home"><button class="quit">&#10060; Déconnecter</button></form>
+{% endblock %}

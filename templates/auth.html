@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block body %}
+        <h1>Bienvenue au service répertoire<br><br>Veuillez saisir votre matricule et votre mot de passe</h1>
+        <form method="POST" action="/dashboard" class="content">
+            <a>Matricule :</a>
+            <input type="number" placeholder="Matricule" name="matricule" min="10000" max="99999" oninput="if(this.value.length > 5) this.value = this.value.slice(0,5);" required><br><br>
+            <a>Mot de passe :</a>
+            <input type="password" name="mot de passe" placeholder="Mot de passe" required><br><br>
+            <button type="submit">&#10140; Login</button>
+        </form>
+        <h2 style="color: #a0C4FF;" >{{info}}</h2>
+{% endblock %}

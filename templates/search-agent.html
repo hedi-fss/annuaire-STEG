@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <h3>Veuillez utiliser la barre de recherche</h3>
+  <form method="POST" action="/search-agent" class="content">
+    <input class="search-container" type="text" name="search" placeholder="Nom ou num tel"><br><br>
+    <select id="division" name="division">
+      <option value="" selected>---Division---</option>
+      {% for division in divisions %}
+      <option value={{division.Id_division}}>{{division.nom}}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">&#128269; Rechercher</button><br><br>
+  </form><br><br>
+{% if results %}
+    <table  width="100%" cellspacing="0" cellpadding="5">
+      <thead>
+          <th>Matricule</th>
+          <th>Nom</th>
+          <th>Numéro de téléphone</th>
+          <th>Division</th>
+      </thead>
+  {% for result in results %}
+      <tr>
+          <td>{{ result.matricule }}</td>
+          <td>{{ result.nom }}</td>
+          <td>{{ result.tel }}</td>
+          <td>{{ result.division.nom }}</td>
+      </tr>
+  {% endfor %}
+  </table>
+  <form method="POST" action="/download" style="margin-top: 20px;">
+      <input type="hidden" name="search" value="{{ request.form.get('search', '') }}">
+      <input type="hidden" name="division" value="{{ request.form.get('division', '') }}">
+      <button type="submit">&#128190; Télécharger en PDF</button><br><br>
+  </form>
+  <div class="pagination">
+  {% if results.has_prev %}
+    <a class="suivant" href="{{ url_for('search_admin', page=results.prev_num, search=search, division=division) }}">Précédent</a>
+  {% endif %}
+    Page {{ results.page }} sur {{ results.pages }}
+{% if results.has_next %}
+    <a class="suivant" href="{{ url_for('search_admin', page=results.next_num, search=search, division=division) }}">Suivant</a>
+  {% endif %}
+</div><br><br>
+{% endif %}<br><br>
+<form method="post" action="/return-dashboard"><button type="submit" class="retour">&#128281; Retour</button></form>
+    <form method="post" action="/home"><button class="quit">&#10060; Déconnecter</button></form>
+{% endblock %}

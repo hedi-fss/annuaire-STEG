@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='auth.css')}}">
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/Logo.svg')}}" alt="Logo">
+    <title>Logiciel d'annuaire téléphonique</title>
+    <style> .bg{    background-image: url("{{ url_for('static', filename='images/img_acc.png')}}");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px 0 rbga(31,38,135,0.37);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.18);
+}</style>
+<script>
+  function returnToRefferer() {
+    history.go(-1);
+  }
+</script>
+</head>
+<body>
+<header>
+    <div style="display: responsive; justify-content: center; margin: 2%;"><img src="{{ url_for('static', filename='images/haut_a1_fr_gris.png')}}"></div><br>
+</header>
+<main><div class="bg">{% block body %}{% endblock %}</div>
+</main>
+</body><br><br>
+<footer>
+    <aside style="color: #E6F0FA; font-family: 'Swiss';">&copy; STEG tous les droits réservés</aside>
+</footer>
+</html>

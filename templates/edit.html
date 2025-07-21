@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>Modifier le contact de {{user.nom}}</h1>
+<form action="/edit/{{user.matricule}}" method="POST" class="content">
+    <input type="text" name="nom" id="nom" value="{{user.nom}}" placeholder="Nom" required>
+    <input type="number" name="tel" id="tel" value="{{user.tel}}" placeholder="Téléphone" required>
+    <label for="division" class="division">Division:
+    </label>
+     <select id="division" name="division" value="{{user.division}}" required>
+      <option value={{user.Id_division}} selected>{{user.division.nom}}</option>
+        {% for division in divisions %}
+        {% if division.Id_division!= user.Id_division %}
+      <option value={{division.Id_division}}>{{division.nom}}</option>
+      {%endif%}
+      {% endfor %}
+    </select><br><br>
+    <select id="type" name="type" required>
+      {%if user.acces=="Agent"%}
+                <option value="Agent" selected>Agent</option>
+                <option value="Administrateur">Administrateur</option>
+      {% else %}
+                <option value="Administrateur" selected>Administrateur</option>
+                <option value="Agent">Agent</option>
+      {% endif %}
+    </select><br><br>
+    <input type="password" name="pwrd" placeholder="Mot de passe" required><br><br>
+    <button type="submit">&#128395; Modifier</button>
+</form>
+<p>{{ info_edit }}</p>
+<p>{{ info_pwrd }}</p>
+<br><br>
+{%if user.matricule==matricule%}
+<form method="post" action="/return-profil"><button type="submit" class="retour">&#128281; Retour</button></form>
+{%else%}
+<form method="post" action="/return-search"><button type="submit" class="retour">&#128281; Retour</button></form>
+{%endif%}
+<form method="post" action="/home"><button class="quit">&#10060; Déconnecter</button></form>
+{% endblock %}

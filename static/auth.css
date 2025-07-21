@@ -1,0 +1,170 @@
+body {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    color: #ffffff;
+    text-align: center;
+    margin: 4%;
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    font-size: relative;
+    background: #F6F6F6;
+    height: 1vh;
+}
+
+button{
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    animation:reset_color 0.5s forwards;
+    color: #0066CC;
+    border: none;
+    box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),        7px 7px 20px 0px rgba(0,0,0,.1),        4px 4px 5px 0px rgba(0,0,0,.1);
+    outline: none;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    -webkit-animation:reset_color 0.5s forwards;
+}
+button:hover{
+    animation: change_color 0.3s forwards;
+    -webkit-animation: change_color 0.3s forwards;
+}
+@keyframes change_color {
+    0%{
+        background-color: gainsboro;
+    }
+    100%{
+        background-color: #e30613;
+    }
+}
+@keyframes reset_color {
+    0%{
+        background-color: #e30613;
+    }
+    100%{
+        background-color: gainsboro;
+    }
+}
+select{
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    animation: forwards;
+    -webkit-animation: forwards;
+    color: #0066CC;
+    width: relative;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    border: none;
+    text-align: center;
+}
+footer{
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    margin-bottom: 200%;
+    background: #e30613;
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+    position: sticky;
+}
+th,tr,td{
+    word-spacing: normal;
+    width: 5%;
+    text-align: center;
+    border: 1px solid #f6f6f6;
+}
+table{
+    width: 100%;
+    text-align: center;
+    background-color: #a0C4FF;
+    color: #0066CC;
+}
+input{
+    width: relative;
+    text-align: center;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    border: none;
+}
+p{
+    color: #a0C4FF;
+}
+.content{
+    padding: 5px;
+    border-radius: 16px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    background-color: #a0C4FF;
+    color: #e30613;
+    animation: fadeIn 1s ease;
+    -webkit-animation: fadeIn 1s ease;
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
+    -ms-border-radius: 16px;
+    -o-border-radius: 16px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    -webkit-transition: transform 0.3s ease, box-shadow 0.3s ease;
+    -moz-transition: transform 0.3s ease, box-shadow 0.3s ease;
+    -ms-transition: transform 0.3s ease, box-shadow 0.3s ease;
+    -o-transition: transform 0.3s ease, box-shadow 0.3s ease;
+    align-items: center;
+    justify-content: center;
+}
+.content:hover{
+    transform: translateY(-12px) scale(1.03);
+    -webkit-transform: translateY(-12px) scale(1.03);
+    -moz-transform: translateY(-12px) scale(1.03);
+    -ms-transform: translateY(-12px) scale(1.03);
+    -o-transform: translateY(-12px) scale(1.03);
+    box-shadow: 0 16px 24px rgba(0,0,0,0.2);
+}
+img{
+    animation: slideDown 1s ease-out;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    -webkit-animation: slideDown 1s ease-out;
+    align-items: center;
+    width: 90%;
+}
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-30px); opacity: 0; -webkit-transform: translateY(-30px); -moz-transform: translateY(-30px); -ms-transform: translateY(-30px); -o-transform: translateY(-30px); }
+  to { transform: translateY(0); opacity: 1; -webkit-transform: translateY(0); -moz-transform: translateY(0); -ms-transform: translateY(0); -o-transform: translateY(0); }
+}
+a{
+    color: #ffffff;
+    font-size: 15px;
+}
+.division{
+    color: #ffffff;
+    font-size: 15px;
+}
+.quit{
+    float: right;
+}
+.retour{
+    float: left;
+}
+.consult,.search,.add,.tel{
+    width:75%;
+    height: 50px;
+    font-size: large;
+}
+.pwrd,.matricule{
+    font-size: larger;
+}
