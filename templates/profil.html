@@ -1,12 +1,17 @@
 {% extends "base.html" %}
 
 {% block body %}
+{%if user == None%}
+<h1>L'accés n'est pas autorisé</h1>
+<form method="post", action="/logout"><button type ="submit" class="auth">Login</button></form>
+{%else%}
 <h1>Votre Profil</h1>
 <ol>
 <h3>Matricule: {{user.matricule}}</h3>
 <h3>Nom: {{ user.nom }}</h3>
 <h3>Numéro de téléphone: {{user.tel}}</h3>
-<h3>Division: {{ user.division.nom }}</h3>
+<h3>Service: {{ user.service.nom }}</h3>
+<h3>Division: {{ user.service.division.nom }}</h3>
 <h3>Type d'accés: {{user.acces}}</h3>
 </ol>
 {% if user.acces == 'Agent' %}
@@ -22,5 +27,6 @@
 <p>{{info_pwrd}}</p>
 <br><br>
 <form method="post" action="/return-dashboard"><button type="submit" class="retour">&#128281; Retour</button></form>
-<form method="post" action="/home"><button class="quit">&#10060; Déconnecter</button></form>
+<form method="post" action="/logout"><button class="quit">&#10060; Déconnecter</button></form>
+{%endif%}
 {% endblock %}

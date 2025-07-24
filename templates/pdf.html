@@ -12,6 +12,7 @@
                 <th>Matricule</th>
                 <th>Nom</th>
                 <th>Téléphone</th>
+                <th>Service</th>
                 <th>Division</th>
             </tr>
         </thead>
@@ -21,7 +22,8 @@
                 <td>{{ result.matricule }}</td>
                 <td>{{ result.nom }}</td>
                 <td>{{ result.tel }}</td>
-                <td>{{ result.division.nom }}</td>
+                <td>{{ result.service.nom }}</td>
+                <td>{{ result.service.division.nom }}</td>
             </tr>
             {% endfor %}
         </tbody>

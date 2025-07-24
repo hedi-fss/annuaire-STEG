@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
 {% if requests %}
-  <h3>Gérer les demandes de changement de téléphone</h3>
+  <h1>Gérer les demandes de changement de téléphone</h1>
   <table width="100%" cellspacing="0" cellpadding="5">
     <thead>
         <th>Id</th>
@@ -38,5 +38,5 @@
 {% endif %}
 <br><br>
 <form method="post" action="/return-dashboard"><button type="submit" class="retour">&#128281; Retour</button></form>
-<form method="post" action="/home"><button class="quit">&#10060; Déconnecter</button></form>
+<form method="post" action="/logout"><button class="quit">&#10060; Déconnecter</button></form>
 {% endblock %}

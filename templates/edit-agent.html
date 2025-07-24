@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block body %}
-<h2>Modification du profil de l'agent {{user.nom}}</h2><br><br>
+<h1>Modification du profil de l'agent {{user.nom}}</h1><br><br>
 <form method="POST" action="/edit-tel" class="edit-mobile">
     <input type="text" name="tel" placeholder="Numéro de téléphone"><br><br>
     <button type="submit">&#128395; Modifier votre numéro de téléphone</button>
@@ -13,5 +13,5 @@
 <p>{{info_pwrd}}</p>
 <br><br>
 <form method="post" action="/return-profil"><button type="submit" class="retour">&#128281; Retour</button></form>
-<form method="post" action="/home"><button class="quit">&#10060; Déconnecter</button></form>
+<form method="post" action="/logout"><button class="quit">&#10060; Déconnecter</button></form>
 {% endblock %}

@@ -4,15 +4,29 @@
 <form action="/edit/{{user.matricule}}" method="POST" class="content">
     <input type="text" name="nom" id="nom" value="{{user.nom}}" placeholder="Nom" required>
     <input type="number" name="tel" id="tel" value="{{user.tel}}" placeholder="Téléphone" required>
-    <label for="division" class="division">Division:
+    <label for="service" class="service">Service:
     </label>
-     <select id="division" name="division" value="{{user.division}}" required>
-      <option value={{user.Id_division}} selected>{{user.division.nom}}</option>
-        {% for division in divisions %}
-        {% if division.Id_division!= user.Id_division %}
-      <option value={{division.Id_division}}>{{division.nom}}</option>
-      {%endif%}
-      {% endfor %}
+      <select id="service" name="service">
+      <optgroup label="Software">
+        <option value="Web">Web</option>
+        <option value="App">App</option>
+        <option value="IA">Intelligence Artificielle</option>
+    </optgroup>
+    <optgroup label="Télécommunication">
+        <option value="Réseau">Réseau</option>
+        <option value="Communication">Communication</option>
+        <option value="Cybersécurité">Cybersécurité</option>
+    </optgroup>
+    <optgroup label="Hardware">
+        <option value="CPU">CPU</option>
+        <option value="GPU">GPU</option>
+        <option value="TTL">TTL</option>
+    </optgroup>
+    <optgroup label="Direction">
+        <option value="Gestion">Gestion</option>
+        <option value="RH">Ressources Humaines</option>
+        <option value="Relations externes">Relations externes</option>
+    </optgroup>
     </select><br><br>
     <select id="type" name="type" required>
       {%if user.acces=="Agent"%}
@@ -34,5 +48,5 @@
 {%else%}
 <form method="post" action="/return-search"><button type="submit" class="retour">&#128281; Retour</button></form>
 {%endif%}
-<form method="post" action="/home"><button class="quit">&#10060; Déconnecter</button></form>
+<form method="post" action="/logout"><button class="quit">&#10060; Déconnecter</button></form>
 {% endblock %}

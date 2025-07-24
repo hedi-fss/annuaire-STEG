@@ -1,17 +1,34 @@
 {% extends "base.html" %}
 {% block body %}
-<h3>Ajouter un nouveau contact ici</h3>
+<h1>Ajouter un nouveau contact ici</h1>
 <form method="POST" action="/attribute" class="content">
   <input type="number" name="matricule" min="10000" max="99999" oninput="if(this.value.length > 5) this.value = this.value.slice(0,5);" placeholder="Matricule" required><br><br>
   <input type="text" name="nom" placeholder="Nom de l'utilisateur" required><br><br>
   <input type="number" name="tel" min="20000000" max="99999999" oninput="if(this.value.length > 8) this.value = this.value.slice(0,8);" placeholder="Téléphone" required><br><br>
-  <label for="division" class="division">Division:
+  <label for="service" class="service">Service:
   </label>
-   <select id="division" name="division" required>
-    {% for division in divisions%}
-      <option value={{division.Id_division}}>{{division.nom}}</option>
-      {% endfor %}
-  </select><br><br>
+   <select id="service" name="service" required>
+    <optgroup label="Software">
+        <option value="Web">Web</option>
+        <option value="App">App</option>
+        <option value="IA">Intelligence Artificielle</option>
+    </optgroup>
+    <optgroup label="Télécommunication">
+        <option value="Réseau">Réseau</option>
+        <option value="Communication">Communication</option>
+        <option value="Cybersécurité">Cybersécurité</option>
+    </optgroup>
+    <optgroup label="Hardware">
+        <option value="CPU">CPU</option>
+        <option value="GPU">GPU</option>
+        <option value="TTL">TTL</option>
+    </optgroup>
+    <optgroup label="Direction">
+        <option value="Gestion">Gestion</option>
+        <option value="RH">Ressources Humaines</option>
+        <option value="Relations externes">Relations externes</option>
+    </optgroup>
+</select><br><br>
   <select id="type" name="type" required>
     <option value="Agent" selected>Agent</option>
     <option value="Administrateur">Administrateur</option>
@@ -23,5 +40,5 @@
 <p>{{ info_ajout }}</p>
 <br><br>
 <form method="post" action="/return-dashboard"><button type="submit" class="retour">&#128281; Retour</button></form>
-<form method="post" action="/home"><button class="quit">&#10060; Déconnecter</button></form>
+<form method="post" action="/logout"><button class="quit">&#10060; Déconnecter</button></form>
 {% endblock %}
