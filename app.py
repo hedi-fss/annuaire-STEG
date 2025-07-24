@@ -61,14 +61,29 @@ class Division(db.Model):
     __tablename__ = 'division'
     Id_division = db.Column('Id_division', db.Integer, primary_key=True)
     nom = db.Column('nom', db.String(40), nullable=False)
-
+def verify_tel(tel):
+    test=0
+    if(tel.isdigit()==False):
+        return "Le numéro doit être composé de chiffres uniquement."
+    elif(len(tel)!=8):
+        if(len(tel)==7):
+            return "Le numéro manque un chiffre."
+        elif(len(tel)<7):
+            return f"Le numéro manque {8-len(tel)} chiffres."
+        elif(len(tel)==9):
+            return "Le numéro contient un chiffre extra."
+        else:
+            return f"Le numéro contient {len(tel)-8} chiffres extras."
+    elif (int(tel[0]) not in [2,3,4,5,7,9]):
+        return f"Un numéro de téléphone ne commence pas par {tel[0]}."
+    return test
 def verify_pwrd(pwrd):
     test=0
     if(len(pwrd)<8):
         if(len(pwrd)==7):
-            return 'ajouter un caractére au minimum'
+            return 'Ajouter un caractére au minimum.'
         else:
-            return f'ajouter {8-len(pwrd)} caractéres au minimum'
+            return f'Ajouter {8-len(pwrd)} caractéres au minimum.'
     i=0
     while(i<len(pwrd)):
         if(pwrd[i].isdigit()==True):
@@ -76,7 +91,7 @@ def verify_pwrd(pwrd):
         else:
             i=i+1
     if(i<=len(pwrd)):
-        return "Le mot de passe ne contient aucun chiffre"
+        return "Le mot de passe ne contient aucun chiffre."
     i=0
     while(i<len(pwrd)):
         if('a'<=pwrd[i]<='z'):
@@ -84,7 +99,7 @@ def verify_pwrd(pwrd):
         else:
             i=i+1
     if(i<=len(pwrd)):
-        return 'Le mot de passe ne contient aucun caractère minuscule'
+        return 'Le mot de passe ne contient aucun caractère minuscule.'
     i=0
     while(i<len(pwrd)):
         if('A'<=pwrd[i]<='Z'):
@@ -92,7 +107,7 @@ def verify_pwrd(pwrd):
         else:
             i=i+1
     if(i<=len(pwrd)):
-        return 'Le mot de passe ne contient aucun caractère majuscule'
+        return 'Le mot de passe ne contient aucun caractère majuscule.'
     i=0
     while(i<len(pwrd)):
         if not('A'<=pwrd[i]<='Z' or 'a'<=pwrd[i]<='z' or (pwrd[i].isdigit()==True and 0<=int(pwrd[i])<=9)):
@@ -100,7 +115,7 @@ def verify_pwrd(pwrd):
         else:
             i=i+1
     if(i<=len(pwrd)):
-        return 'Le mot de passe ne contient aucun symbôle'
+        return 'Le mot de passe ne contient aucun symbôle.'
     return test
 @app.route('/')
 def hello_world():
@@ -219,15 +234,19 @@ def attribute():
         service = request.form['service']
         acces = request.form['type']
         pwrd = request.form['pwrd']
-        test = verify_pwrd(pwrd)
-        if (test != 0):
-            return render_template('ajout.html',info_pwrd=f"Ce mot de passe n'est pas fort! {test}")
+        test_pwrd = verify_pwrd(pwrd)
+        test_tel =verify_tel(tel)
+        if (test_pwrd != 0 and test_tel != 0):
+            return render_template('ajout.html',info_tel=test_tel,info_pwrd=f"Ce mot de passe n'est pas fort! {test_pwrd}")
+        elif (test_tel != 0):
+            return render_template('ajout.html',info_tel=test_tel)
+        elif (test_pwrd != 0):
+            return render_template('ajout.html',info_pwrd=f"Ce mot de passe n'est pas fort! {test_pwrd}")
         service_obj = Service.query.filter_by(nom=service).first()
         if not service_obj:
-            return "Service not found", 400
+            return render_template('ajout.html', user=user, info_service="Service introuvable")
         hashed_pwrd = generate_password_hash(pwrd)
         newUser = User(matricule=matricule, nom=nom, tel=tel,password=hashed_pwrd, Id_service=service_obj.Id_service, acces=acces)
-
         try:
             db.session.add(newUser)
             db.session.commit()
@@ -301,7 +320,7 @@ def edit_all(matricule):
     if matri:
         if matricule == matri:
             user=User.query.filter_by(matricule=matricule).first()
-            return render_template('edit.html', user=user, matricule=matricule)
+            return render_template('edit.html', user=user, matricule=matricule, profil=1)
         return render_template('acces-error.html')
     return render_template('dashboard.html',user=None)
 @app.route('/edit-agent/<int:matricule>', methods=['POST', 'GET'])
@@ -337,37 +356,44 @@ def edit_pwrd(matricule):
     return("acces-error.html")
 @app.route('/edit/<int:matricule>', methods=['POST', 'GET'])
 def edit(matricule):
-    if session:
+    if session and 'matricule' in session:
         user = User.query.get(matricule)
+        matri=session['matricule']
         if not user:
             return render_template('edit.html', info_edit="Utilisateur introuvable.")
+        if matri==matricule:
+            profil=1
+        profil=0
         if request.method == "POST":
             nom = request.form['nom']
             tel = request.form['tel']
             service = request.form['service']
             acces = request.form['type']
             pwrd = request.form['pwrd']
-            test=verify_pwrd(pwrd)
-            if (test!=0):
-                return render_template('edit.html', user=user, info_pwrd=f"Ce mot de passe n'est pas fort ! {test}")
+            test_pwrd = verify_pwrd(pwrd)
+            test_tel =verify_tel(tel)
+            if (test_pwrd != 0 and test_tel != 0):
+                return render_template('edit.html',profil=profil,info_tel=test_tel,info_pwrd=f"Ce mot de passe n'est pas fort! {test_pwrd}",user=user)
+            elif (test_tel != 0):
+                return render_template('edit.html',profil=profil,info_tel=test_tel,user=user)
+            elif (test_pwrd != 0):
+                return render_template('edit.html',profil=profil,info_pwrd=f"Ce mot de passe n'est pas fort! {test_pwrd}",user=user)
             service_obj = Service.query.filter_by(nom=service).first()
             if not service_obj:
-                return render_template('edit.html', user=user, info_edit="Service introuvable")
+                return render_template('edit.html',profil=profil, user=user, info_edit="Service introuvable")
             s = service_obj.Id_service
-            if not tel.isdigit() or not (len(tel)==8 and int(tel[0]) in [2,3,4,5,9]):
-                return render_template('edit.html', user=user, info_edit="Numéro de téléphone invalide")
             update_data = {'nom': nom, 'tel': tel, 'Id_service':s, 'acces': acces}
             if pwrd:
                 update_data['password'] = generate_password_hash(pwrd)
             try:
                 User.query.filter_by(matricule=matricule).update(update_data)
                 db.session.commit()
-                return render_template("edit.html", user=user, info_edit=f"{acces} modifié avec succès")
+                return render_template("edit.html",profil=profil, user=user, info_edit=f"{acces} modifié avec succès")
             except Exception as e:
                 print(f"ERROR {e}")
-                return render_template('edit.html', user=user, info_edit=f"Erreur lors de la modification: {e}")
+                return render_template('edit.html',profil=profil, user=user, info_edit=f"Erreur lors de la modification: {e}")
         else:
-            return render_template('edit.html', user=user)
+            return render_template('edit.html',profil=profil, user=user)
     return render_template('acces-error.html')
 @app.route('/delete/<int:matricule>', methods=['POST', 'GET'])
 def delete(matricule):
@@ -391,17 +417,9 @@ def edit_tel():
     user= User.query.get(matricule)
     if request.method == "POST":
         tel=request.form['tel']
-        liste=['2','3','4','5','9']
-        if(len(tel)==7):
-            return render_template("edit-agent.html", user=user, info_tel="Il vous manque un seul chiffre")
-        elif(len(tel)==9):
-            return render_template("edit-agent.html", user=user, info_tel="Vous avez taper un chiffre extra")
-        elif(len(tel)>9):
-            return render_template("edit-agent.html", user=user, info_tel=f"Vous avez taper {len(tel)-8} chiffres extras")
-        elif(len(tel)<7):
-            return render_template("edit-agent.html", user=user, info_tel=f"Il vous manque {8-len(tel)} chiffres")
-        elif(tel[0] not in liste):
-            return render_template("edit-agent.html", user=user, info_tel=f"Un numéro de téléphone ne commence pas par {int(tel[0])}")
+        test_tel =verify_tel(tel)
+        if (test_tel != 0):
+            return render_template('edit-agent.html',info_tel=test_tel)
         last_demande=db.session.query(Demande).order_by(Demande.Id.desc()).first()
         id=int(last_demande.Id)+1
         try:

@@ -9,24 +9,24 @@
   </label>
    <select id="service" name="service" required>
     <optgroup label="Software">
-        <option value="Web">Web</option>
-        <option value="App">App</option>
-        <option value="IA">Intelligence Artificielle</option>
+        <option value="1">Web</option>
+        <option value="2">App</option>
+        <option value="3">Intelligence Artificielle</option>
     </optgroup>
     <optgroup label="Télécommunication">
-        <option value="Réseau">Réseau</option>
-        <option value="Communication">Communication</option>
-        <option value="Cybersécurité">Cybersécurité</option>
+        <option value="4">Réseau</option>
+        <option value="5">Communication</option>
+        <option value="6">Cybersécurité</option>
     </optgroup>
     <optgroup label="Hardware">
-        <option value="CPU">CPU</option>
-        <option value="GPU">GPU</option>
-        <option value="TTL">TTL</option>
+        <option value="7">CPU</option>
+        <option value="8">GPU</option>
+        <option value="9">TTL</option>
     </optgroup>
     <optgroup label="Direction">
-        <option value="Gestion">Gestion</option>
-        <option value="RH">Ressources Humaines</option>
-        <option value="Relations externes">Relations externes</option>
+        <option value="10">Gestion</option>
+        <option value="11">Ressources Humaines</option>
+        <option value="12">Relations externes</option>
     </optgroup>
 </select><br><br>
   <select id="type" name="type" required>
@@ -36,7 +36,9 @@
   <input type="password" name="pwrd" placeholder="Mot de passe" required><br><br>
   <button type="submit">&#43; Ajouter</button>
 </form>
-<p>{{info_pwrd}}</p>
+<p>{{info_pwrd}}</p><br>
+<p>{{info_tel}}</p><br>
+<p>{{info_service}}</p><br>
 <p>{{ info_ajout }}</p>
 <br><br>
 <form method="post" action="/return-dashboard"><button type="submit" class="retour">&#128281; Retour</button></form>

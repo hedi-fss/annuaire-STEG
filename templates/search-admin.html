@@ -11,27 +11,27 @@
     <select id="service" name="service">
       <option value="">---Service---</option>
       <optgroup label="Software">
-        <option value="Web">Web</option>
-        <option value="App">App</option>
-        <option value="IA">Intelligence Artificielle</option>
+        <option value="1">Web</option>
+        <option value="2">App</option>
+        <option value="3">Intelligence Artificielle</option>
     </optgroup>
     <optgroup label="Télécommunication">
-        <option value="Réseau">Réseau</option>
-        <option value="Communication">Communication</option>
-        <option value="Cybersécurité">Cybersécurité</option>
+        <option value="4">Réseau</option>
+        <option value="5">Communication</option>
+        <option value="6">Cybersécurité</option>
     </optgroup>
     <optgroup label="Hardware">
-        <option value="CPU">CPU</option>
-        <option value="GPU">GPU</option>
-        <option value="TTL">TTL</option>
+        <option value="7">CPU</option>
+        <option value="8">GPU</option>
+        <option value="9">TTL</option>
     </optgroup>
     <optgroup label="Direction">
-        <option value="Gestion">Gestion</option>
-        <option value="RH">Ressources Humaines</option>
-        <option value="Relations externes">Relations externes</option>
+        <option value="10">Gestion</option>
+        <option value="11">Ressources Humaines</option>
+        <option value="12">Relations externes</option>
     </optgroup>
     </select>
-    <button type="submit">&#128269; Rechercher</button><br><br>
+    <button type="submit">&#128269; Rechercher</button><br><br
   </form><br><br>
 {% if results %}
     <table  width="100%" cellspacing="0" cellpadding="5">
@@ -41,6 +41,8 @@
           <th>Numéro de téléphone</th>
           <th>Service</th>
           <th>Division</th>
+          <th>Modification</th>
+          <th>Suppression</th>
       </thead>
   {% for result in results %}
       <tr>
@@ -49,6 +51,7 @@
           <td>{{ result.tel }}</td>
           <td>{{ result.service.nom }}</td>
           <td>{{ result.service.division.nom}}</td>
+          {% if result.matricule != user.matricule%}
           <td>
               <form method="GET" action="/edit/{{ result.matricule }}" style="display:inline;">
                 <button type="submit">&#128395; Modifier</button>
@@ -59,6 +62,9 @@
                 <button type="submit">&#128465; Supprimer</button>
               </form>
           </td>
+          {%else%}
+          <td><form method="post" action="/return-profil",style="display:inline;"><button type="submit">Profil</button></form></td>
+          {%endif%}
       </tr>
   {% endfor %}
   </table>
