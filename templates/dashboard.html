@@ -1,12 +1,16 @@
 {% extends "base.html" %}
 
 {% block body %}
-{% if name %}
-    <h1>Bienvenue à l'espace de l'{% if acces=='Administrateur' %}administrateur{% else %}agent{% endif %}: {{name}}</h1>
+{%if user==None%}
+    <h1>Bienvenue au projet de l'annuaire <br> Veuillez vous inscrire à travers le bouton ci dessous</h1>
+    <form method="post", action="/auth"><button type ="submit" class="auth">Login</button></form>
+{%else%}
+{% if user.nom %}
+    <h1>Bienvenue à l'espace de l'{% if user.acces=='Administrateur' %}administrateur{% else %}agent{% endif %}: {{user.nom}}</h1>
 {% endif %}
     <h2>Veuillez choisir le service adéquat</h2>
     <form method="post" action="/consult/{{matricule}}"><button class="consult">Consulter le profil personnel</button></form>
-    {% if acces=='Administrateur' %}
+    {% if user.acces=='Administrateur' %}
         <form method="post" action="/search-admin"><button class="search">Consulter le répertoire</button></form>
         <form method="post" action="/add"><button class="add">Ajouter un employé</button></form>
         <form method="post" action="/request-tel"><button class="tel">Consulter les demandes de modification du numéro de téléphone</button></form>
@@ -15,4 +19,5 @@
     {% endif %}
     <br><br>
     <form method="post" action="/home"><button class="quit">&#10060; Déconnecter</button></form>
+{%endif%}
 {% endblock %}

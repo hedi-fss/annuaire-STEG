@@ -7,6 +7,7 @@ from xhtml2pdf import pisa
 from io import BytesIO
 import os
 from sqlalchemy import create_engine,text
+from datetime import timedelta
 db_path="C:\\Users\\Hedi Moalla\\Desktop\\Stage Juillet 2025\\instance\\users_data.db"
 if not os.path.exists(db_path):
     engine=create_engine("sqlite:///instance/users_data.db")
@@ -24,7 +25,7 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///users_data.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-from datetime import timedelta
+
 app.permanent_session_lifetime = timedelta(minutes=5)
 
 db = SQLAlchemy(app)
@@ -98,24 +99,27 @@ def verify_pwrd(pwrd):
     if(i<=len(pwrd)):
         return 'Le mot de passe ne contient aucun symbôle'
     return test
-@app.route('/dashboard', methods=['POST', 'GET'])
-def dashboard():
-    matricule = request.form.get('matricule')
-    pwrd = request.form.get('mot de passe')
-    user = User.query.filter_by(matricule=matricule).first()
-    if user is None:
-        return render_template('auth.html', info="Utilisateur Invalide")
-    elif not check_password_hash(user.password, pwrd):
-        return render_template('auth.html', info="Mot de passe incorrect")
-    else:
-        session['matricule']=user.matricule
-        return render_template('dashboard.html', name=user.nom,acces=user.acces, matricule=matricule, session=session)
 @app.route('/')
 def hello_world():
     if 'username' in session:
         user=User.query.get(session['matricule'])
-        return render_template("dashboard.html",name=user.nom, acces=user.acces, matricule=matricule, session=session)
-    return render_template('auth.html')
+        return render_template("dashboard.html",user=user, matricule=matricule, session=session)
+    return render_template('dashboard.html', user=None)
+@app.route('/auth', methods=['POST', 'GET'])
+def auth():
+    if request.method=='POST':
+        return render_template('auth.html')
+    return request.url
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    matricule = request.form.get('matricule')
+    pwrd = request.form.get('mot de passe')
+    user = User.query.filter_by(matricule=matricule).first()
+    if not check_password_hash(user.password, pwrd):
+        return render_template('auth.html', info="Mot de passe incorrect")
+    else:
+        session['matricule']=user.matricule
+        return render_template('dashboard.html', user=user, matricule=matricule, session=session)
 @app.route('/add', methods=['GET', 'POST'])
 def add():
     if request.method == "GET":
@@ -133,12 +137,13 @@ def request_tel():
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     if request.method == "POST":
-        return redirect('/')
+        return render_template("dashboard.html", user=None)
     return request.url
 @app.route('/return-dashboard', methods=['GET', 'POST'])
 def return_dashboard():
     if request.method == "POST":
-        user=User.query.get(session['matricule'])
+        matricule=session['matricule']
+        user=User.query.get(matricule)
         return render_template('dashboard.html', name=user.nom, acces=user.acces, matricule=user.matricule, session=session)
     return request.url
 @app.route('/return-profil', methods=['GET', 'POST'])
