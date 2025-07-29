@@ -1,5 +1,6 @@
-import pandas as pd
 import sqlite3
 con = sqlite3.connect("instance/users_data.db")
-df = pd.read_sql("SELECT * from service", con)
-print(df)
+cur=con.cursor()
+cur.execute("Update service set nom='Intelligence Artificielle' where nom='IA'")
+con.commit()
+con.close()

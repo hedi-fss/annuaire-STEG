@@ -33,7 +33,7 @@
     </select>
     <button type="submit">&#128269; Rechercher</button><br><br
   </form><br><br>
-{% if results %}
+{% if results.pages > 0 %}
     <table  width="100%" cellspacing="0" cellpadding="5">
       <thead>
           <th>Matricule</th>
@@ -53,9 +53,7 @@
           <td>{{ result.service.division.nom}}</td>
           {% if result.matricule != user.matricule%}
           <td>
-              <form method="GET" action="/edit/{{result.matricule}}" style="display:inline;">
-                <button type="submit">&#128395; Modifier</button>
-              </form>
+                  <a class="btn" href="/edit/{{ result.matricule }}">&#128395; Modifier</a>
           </td>
           <td>
               <form method="POST" action="/delete/{{ result.matricule }}" style="display:inline;">
@@ -82,6 +80,8 @@
     <a class="suivant" href="{{ url_for('search_admin', page=results.next_num, search=search, service=service) }}"><button>Suivant</button></a>
   {% endif %}
 </div><br><br>
+{%else%}
+<h1>Aucun résultat pour cette requête</h1>
 {% endif %}<br><br>
 <p>{{ info_edit }}</p>
 <p>{{ info_delete }}</p>

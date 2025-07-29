@@ -13,6 +13,7 @@ body {
 }
 
 button{
+    font-size: 15px;
     font-family: Verdana, Arial, Helvetica, sans-serif;
     animation:reset_color 0.5s forwards;
     -webkit-animation:reset_color 0.5s forwards;
@@ -50,6 +51,47 @@ button:hover{
     100%{
         background-color: gainsboro;
     }
+}
+a.btn{
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  animation: reset_color 0.5s forwards;
+  -webkit-animation: reset_color 0.5s forwards;
+  color: #0066CC !important;
+  text-decoration: none !important;
+  display: inline-block;
+  background-color: gainsboro;
+  border: none;
+  box-shadow: inset 2px 2px 2px 0px rgba(255,255,255,.5),               7px 7px 20px 0px rgba(0,0,0,.1),              4px 4px 5px 0px rgba(0,0,0,.1);
+  outline: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  font-size: 15px;
+  padding: 1px 4px;
+}
+
+a.btn:hover {
+  animation: change_color 0.3s forwards;
+  -webkit-animation: change_color 0.3s forwards;
+  color: white !important;
+}
+
+@keyframes change_color {
+  0% { background-color: gainsboro; }
+  100% { background-color: #e30613; }
+}
+
+@keyframes reset_color {
+  0% { background-color: #e30613; }
+  100% { background-color: gainsboro; }
 }
 select{
     font-family: Verdana, Arial, Helvetica, sans-serif;
