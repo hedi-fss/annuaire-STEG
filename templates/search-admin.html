@@ -3,32 +3,30 @@
 {% block body %}
 {%if user.acces == 'Agent'%}
 <h1>L'accés n'est pas autorisé</h1>
-<form method="post", action="/logout"><button type ="submit" class="auth">Login</button></form>
+<form method="post", action="/logout"><button type ="submit" class="auth">&#10140; Login</button></form>
 {%else%}
 <h1>Utiliser la barre de recherche pour rechercher le contact à modifier ou à supprimer</h1>
   <form method="POST" action="/search-admin" class="content">
     <input class="search-container" type="text" name="search" placeholder="Nom ou num tel" value="{{ search|default('') }}"><br><br>
     <select id="service" title="service" name="service">
       <option value="">---Service---</option>
-      <optgroup label="Software">
-        <option value="1">Web</option>
-        <option value="2">App</option>
-        <option value="3">Intelligence Artificielle</option>
+      <optgroup label="Contrôle des opération">
+        <option value="1">Préparation</option>
+        <option value="2">Assistance utilisateurs informatique</option>
+        <option value="3">Programmation</option>
+        <option value="4">Exploitation</option>
     </optgroup>
-    <optgroup label="Télécommunication">
-        <option value="4">Réseau</option>
-        <option value="5">Communication</option>
-        <option value="6">Cybersécurité</option>
+    <optgroup label="Maintenance informatique et réseau">
+        <option value="5">Maintenance matériel</option>
+        <option value="6">Maintenance réseau</option>
     </optgroup>
-    <optgroup label="Hardware">
-        <option value="7">CPU</option>
-        <option value="8">GPU</option>
-        <option value="9">TTL</option>
+    <optgroup label="Édition">
+        <option value="7">Impression</option>
+        <option value="8">Mise sous pli</option>
     </optgroup>
-    <optgroup label="Direction">
-        <option value="10">Gestion</option>
-        <option value="11">Ressources Humaines</option>
-        <option value="12">Relations externes</option>
+    <optgroup label="Équipements annexes">
+        <option value="9">Gestion</option>
+        <option value="10">Secrétariat</option>
     </optgroup>
     </select>
     <button type="submit">&#128269; Rechercher</button><br><br
@@ -73,11 +71,11 @@
   </form>
   <div class="pagination">
   {% if results.has_prev %}
-    <a class="suivant" href="{{ url_for('search_admin', page=results.prev_num, search=search, service=service) }}"><button>Précédent</button></a>
+    <a class="suivant" href="{{ url_for('search_admin', page=results.prev_num, search=search, service=service) }}"><button>&#x2B05; Précédent</button></a>
   {% endif %}
     Page {{ results.page }} sur {{ results.pages }}
 {% if results.has_next %}
-    <a class="suivant" href="{{ url_for('search_admin', page=results.next_num, search=search, service=service) }}"><button>Suivant</button></a>
+    <a class="suivant" href="{{ url_for('search_admin', page=results.next_num, search=search, service=service) }}"><button>&#x27A1; Suivant</button></a>
   {% endif %}
 </div><br><br>
 {%else%}

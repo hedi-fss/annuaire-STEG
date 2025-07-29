@@ -20,12 +20,12 @@
         {% if request.status=='pending' %}
           <td>
               <form method="GET" action="/handle-request/{{ request.Id }}/Acceptation" style="display:inline;">
-                <button type="submit">Accepter</button>
+                <button type="submit">&#x2714; Accepter</button>
               </form>
           </td>
           <td>
               <form method="POST" action="/handle-request/{{ request.Id }}/Refus" style="display:inline;">
-                <button type="submit">Refuser</button>
+                <button type="submit">&#10060; Refuser</button>
               </form>
           </td>
         {% endif %}

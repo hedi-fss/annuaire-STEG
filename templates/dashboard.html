@@ -3,7 +3,7 @@
 {% block body %}
 {%if user == None %}
     <h1>{%if nouveau == 1%}Bienvenue au projet de l'annuaire{%else%}Session expirée{%endif%} <br> Veuillez vous {%if nouveau == 1%}inscrire{%else%}réinscrire{%endif%} à travers le bouton ci dessous</h1>
-    <form method="post", action="/auth"><button type ="submit" class="auth">Login</button></form>
+    <form method="post", action="/auth"><button type ="submit" class="auth">&#10140; Login</button></form>
 {%else%}
     {% if user.nom %}
         <h1>Bienvenue à l'espace de l'{% if user.acces=='Administrateur' %}administrateur{% else %}agent{% endif %}: {{user.nom}}</h1>
