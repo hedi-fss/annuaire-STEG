@@ -8,7 +8,7 @@
 <h1>Utiliser la barre de recherche pour rechercher le contact à modifier ou à supprimer</h1>
   <form method="POST" action="/search-admin" class="content">
     <input class="search-container" type="text" name="search" placeholder="Nom ou num tel" value="{{ search|default('') }}"><br><br>
-    <select id="service" name="service">
+    <select id="service" title="service" name="service">
       <option value="">---Service---</option>
       <optgroup label="Software">
         <option value="1">Web</option>
@@ -53,7 +53,7 @@
           <td>{{ result.service.division.nom}}</td>
           {% if result.matricule != user.matricule%}
           <td>
-              <form method="GET" action="/edit/{{ result.matricule }}" style="display:inline;">
+              <form method="GET" action="/edit/{{result.matricule}}" style="display:inline;">
                 <button type="submit">&#128395; Modifier</button>
               </form>
           </td>
@@ -63,7 +63,7 @@
               </form>
           </td>
           {%else%}
-          <td><form method="post" action="/return-profil",style="display:inline;"><button type="submit">Profil</button></form></td>
+          <td colspan="2"><form method="post" action="/return-profil" style="display:inline;"><button class="profil-in-search" type="submit">Profil</button></form></td>
           {%endif%}
       </tr>
   {% endfor %}

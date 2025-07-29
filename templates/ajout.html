@@ -7,7 +7,7 @@
   <input type="number" name="tel" min="20000000" max="99999999" oninput="if(this.value.length > 8) this.value = this.value.slice(0,8);" placeholder="Téléphone" required><br><br>
   <label for="service" class="service">Service:
   </label>
-   <select id="service" name="service" required>
+   <select id="service" title="service" name="service" required>
     <optgroup label="Software">
         <option value="1">Web</option>
         <option value="2">App</option>
@@ -29,7 +29,7 @@
         <option value="12">Relations externes</option>
     </optgroup>
 </select><br><br>
-  <select id="type" name="type" required>
+  <select id="type" title="type" name="type" required>
     <option value="Agent" selected>Agent</option>
     <option value="Administrateur">Administrateur</option>
   </select><br><br>

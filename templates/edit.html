@@ -6,7 +6,7 @@
     <input type="number" name="tel" id="tel" value="{{user.tel}}" placeholder="Téléphone" required>
     <label for="service" class="service">Service:
     </label>
-      <select id="service" name="service">
+      <select id="service" title="service" name="service">
       <optgroup label="Software">
         <option value="Web">Web</option>
         <option value="App">App</option>
@@ -28,7 +28,7 @@
         <option value="Relations externes">Relations externes</option>
     </optgroup>
     </select><br><br>
-    <select id="type" name="type" required>
+    <select id="type" name="type" title="type" required>
       {%if user.acces=="Agent"%}
                 <option value="Agent" selected>Agent</option>
                 <option value="Administrateur">Administrateur</option>

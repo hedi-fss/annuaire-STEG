@@ -24,6 +24,9 @@ if not os.path.exists(db_path):
         params={'matricule':10000,'nom':'Hedi','tel':56443199,'password':pwrd, 'acces':'Administrateur', 'Id_service':4}
         connection.execute(text("Insert into user (matricule, nom, tel, password, acces, Id_service) values(:matricule,:nom,:tel,:password,:acces,:Id_service)"),params)
         connection.execute(text("Insert into demande (Id, tel, status, matricule) values(1,97966166,'refused',1)"))
+#with engine.connect("sqlite:///instance/users_data.db") as connection:
+    #connection.execute(text("Update table division set nom='maintenance informatique et réseau' where nom"))
+
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///users_data.db"
@@ -236,13 +239,16 @@ def attribute():
         pwrd = request.form['pwrd']
         test_pwrd = verify_pwrd(pwrd)
         test_tel =verify_tel(tel)
+        test_user=User.query.get(matricule)
+        if (test_user):
+             return render_template('ajout.html',info_tel=f"Matricule {matricule} existe déjà, elle est attribuée à {test_user.nom}")
         if (test_pwrd != 0 and test_tel != 0):
             return render_template('ajout.html',info_tel=test_tel,info_pwrd=f"Ce mot de passe n'est pas fort! {test_pwrd}")
         elif (test_tel != 0):
             return render_template('ajout.html',info_tel=test_tel)
         elif (test_pwrd != 0):
             return render_template('ajout.html',info_pwrd=f"Ce mot de passe n'est pas fort! {test_pwrd}")
-        service_obj = Service.query.filter_by(nom=service).first()
+        service_obj = Service.query.filter_by(Id_service=service).first()
         if not service_obj:
             return render_template('ajout.html', user=user, info_service="Service introuvable")
         hashed_pwrd = generate_password_hash(pwrd)
@@ -356,58 +362,68 @@ def edit_pwrd(matricule):
     return("acces-error.html")
 @app.route('/edit/<int:matricule>', methods=['POST', 'GET'])
 def edit(matricule):
+    print(f"Edit called for {matricule}, method: {request.method}")
     if session and 'matricule' in session:
-        user = User.query.get(matricule)
         matri=session['matricule']
-        if not user:
+        user = User.query.get(matri)
+        ag=User.query.get(matricule)
+        if not ag:
             return render_template('edit.html', info_edit="Utilisateur introuvable.")
         if matri==matricule:
             profil=1
-        profil=0
+        else:
+            profil=0
         if request.method == "POST":
-            nom = request.form['nom']
-            tel = request.form['tel']
-            service = request.form['service']
-            acces = request.form['type']
-            pwrd = request.form['pwrd']
+            nom = request.form.get('nom')
+            tel = request.form.get('tel')
+            service = request.form.get('service')
+            acces = request.form.get('type')
+            pwrd = request.form.get('pwrd')
             test_pwrd = verify_pwrd(pwrd)
-            test_tel =verify_tel(tel)
+            test_tel = verify_tel(tel)
             if (test_pwrd != 0 and test_tel != 0):
-                return render_template('edit.html',profil=profil,info_tel=test_tel,info_pwrd=f"Ce mot de passe n'est pas fort! {test_pwrd}",user=user)
+                return render_template('edit.html', profil=profil, info_tel=test_tel, info_pwrd=f"Ce mot de passe n'est pas fort! {test_pwrd}", user=ag)
             elif (test_tel != 0):
-                return render_template('edit.html',profil=profil,info_tel=test_tel,user=user)
+                return render_template('edit.html', profil=profil, info_tel=test_tel, user=ag)
             elif (test_pwrd != 0):
-                return render_template('edit.html',profil=profil,info_pwrd=f"Ce mot de passe n'est pas fort! {test_pwrd}",user=user)
+                return render_template('edit.html', profil=profil, info_pwrd=f"Ce mot de passe n'est pas fort! {test_pwrd}", user=ag)
             service_obj = Service.query.filter_by(nom=service).first()
             if not service_obj:
-                return render_template('edit.html',profil=profil, user=user, info_edit="Service introuvable")
+                print(f"[DEBUG] Service introuvable: {service}")
+                return render_template('edit.html', profil=profil, user=ag, info_edit="Service introuvable")
             s = service_obj.Id_service
-            update_data = {'nom': nom, 'tel': tel, 'Id_service':s, 'acces': acces}
+            update_data = {'nom': nom, 'tel': tel, 'Id_service': s, 'acces': acces}
             if pwrd:
                 update_data['password'] = generate_password_hash(pwrd)
             try:
                 User.query.filter_by(matricule=matricule).update(update_data)
                 db.session.commit()
-                return render_template("edit.html",profil=profil, user=user, info_edit=f"{acces} modifié avec succès")
+                return render_template("edit.html", profil=profil, user=ag, info_edit=f"{acces} modifié avec succès")
             except Exception as e:
-                print(f"ERROR {e}")
-                return render_template('edit.html',profil=profil, user=user, info_edit=f"Erreur lors de la modification: {e}")
+                print(f"[ERROR] Exception lors de la modification: {e}")
+                return render_template('edit.html', profil=profil, user=ag, info_edit=f"Erreur lors de la modification: {e}")
         else:
-            return render_template('edit.html',profil=profil, user=user)
+            return render_template('edit.html',profil=profil, user=ag)
     return render_template('acces-error.html')
 @app.route('/delete/<int:matricule>', methods=['POST', 'GET'])
 def delete(matricule):
-    if session:
+    if session and "matricule" in session:
         user = User.query.get(matricule)
+        matri=session['matricule']
+        admin=User.query.get(matri)
+        query_obj = query('', '')
+        results = query_obj.paginate(page=1, per_page=10, error_out=False)
         if not user:
-            return render_template("search-admin.html", info_delete="Utilisateur introuvable ou déjà supprimé.")
+            return render_template("search-admin.html", info_delete="Utilisateur introuvable ou déjà supprimé.", user=admin, results=results)
         try:
             db.session.delete(user)
             db.session.commit()
-            return render_template("search-admin.html", info_delete="Utilisateur supprimé de la base de données")
+            query_obj = query('', '')
+            results = query_obj.paginate(page=1, per_page=10, error_out=False)
+            return render_template("search-admin.html", info_delete="Utilisateur supprimé de la base de données", user=admin, results=results)
         except Exception as e:
             print(f"ERROR {e}")
-            return render_template("search-admin.html", info_delete=f"Erreur lors de la suppression: {e}")
+            return render_template("search-admin.html", info_delete=f"Erreur lors de la suppression: {e}", user=admin, results=results)
     return render_template("acces-error.html")
 @app.route('/edit-tel', methods=['POST', 'GET'])
 def edit_tel():
