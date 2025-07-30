@@ -8,6 +8,7 @@ from io import BytesIO
 import os
 from sqlalchemy import create_engine,text
 from datetime import timedelta
+
 db_path="C:\\Users\\Hedi Moalla\\Desktop\\Stage Juillet 2025\\instance\\users_data.db"
 if not os.path.exists(db_path):
     engine=create_engine("sqlite:///instance/users_data.db")
@@ -24,15 +25,13 @@ if not os.path.exists(db_path):
         params={'matricule':10000,'nom':'Hedi Moalla','tel':56443199,'password':pwrd, 'acces':'Administrateur', 'Id_service':4}
         connection.execute(text("Insert into user (matricule, nom, tel, password, acces, Id_service) values(:matricule,:nom,:tel,:password,:acces,:Id_service)"),params)
         connection.execute(text("Insert into demande (Id, tel, status, matricule) values(1,97966166,'refused',1)"))
-#with engine.connect("sqlite:///instance/users_data.db") as connection:
-    #connection.execute(text("Update table division set nom='maintenance informatique et réseau' where nom"))
 
 app = Flask(__name__)
+
 app.secret_key = 'your_secret_key_here'
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///users_data.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.permanent_session_lifetime = timedelta(minutes=5)
-
 db = SQLAlchemy(app)
 
 class Demande(db.Model):
@@ -64,6 +63,7 @@ class Division(db.Model):
     __tablename__ = 'division'
     Id_division = db.Column('Id_division', db.Integer, primary_key=True)
     nom = db.Column('nom', db.String(40), nullable=False)
+
 def verify_tel(tel):
     test=0
     if(tel.isdigit()==False):
@@ -80,6 +80,7 @@ def verify_tel(tel):
     elif (int(tel[0]) not in [2,3,4,5,7,9]):
         return f"Un numéro de téléphone ne commence pas par {tel[0]}."
     return test
+
 def verify_pwrd(pwrd):
     test=0
     if(len(pwrd)<8):
@@ -120,6 +121,7 @@ def verify_pwrd(pwrd):
     if(i<=len(pwrd)):
         return 'Le mot de passe ne contient aucun symbôle.'
     return test
+
 @app.route('/')
 def hello_world():
     if session:
@@ -129,11 +131,13 @@ def hello_world():
         user = User.query.get(matricule)
         return render_template("dashboard.html",user=user, matricule=matricule, session=session)
     return render_template('dashboard.html', user=None, nouveau=1)
+
 @app.route('/auth', methods=['POST', 'GET'])
 def auth():
     if request.method=='POST':
         return render_template('auth.html')
     return request.url
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     matricule = session.get('matricule')
@@ -153,9 +157,11 @@ def login():
             session.permanent = True
             session['matricule']=user.matricule
             return render_template('dashboard.html', user=user, matricule=matricule, session=session)
+
 @app.before_request
 def make_session_permanent():
     session.permanent = True
+
 @app.route('/add', methods=['GET', 'POST'])
 def add():
     if not session:
@@ -170,6 +176,7 @@ def add():
         else:
             return render_template('ajout.html')
     return render_template('dashboard.html', user=None)
+
 @app.route('/request-tel', methods=['GET', 'POST'])
 def request_tel():
     if not session:
@@ -187,10 +194,12 @@ def request_tel():
     if requests.count()==0:
         requests=0
     return render_template('demande.html',requests=requests)
+
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.clear()
     return render_template("dashboard.html", user=None)
+
 @app.route('/return-dashboard', methods=['GET', 'POST'])
 def return_dashboard():
     matricule = session.get('matricule')
@@ -198,6 +207,7 @@ def return_dashboard():
         return render_template('dashboard.html', user=None)
     user = User.query.get(matricule)
     return render_template('dashboard.html', user=user, matricule=user.matricule, session=session)
+
 @app.route('/return-profil', methods=['GET', 'POST'])
 def return_profil():
     matricule = session.get('matricule')
@@ -205,6 +215,7 @@ def return_profil():
         return render_template('dashboard.html', user=None)
     user = User.query.get(matricule)
     return render_template('profil.html',user=user)
+
 @app.route('/return-search', methods=['GET', 'POST'])
 def return_search():
     if not session:
@@ -218,6 +229,7 @@ def return_search():
             return render_template('acces-error.html')
         return redirect(url_for('search_admin'))
     return render_template('dashboard.html', user=None)
+
 @app.route('/consult/<int:matricule>', methods=['GET', 'POST'])
 def consult(matricule):
     matri=session.get('matricule')
@@ -228,6 +240,7 @@ def consult(matricule):
         else:
             return render_template('profil.html',user=None)
     return render_template('dashboard.html', user=None)
+
 @app.route('/attribute', methods=['POST', 'GET'])
 def attribute():
     if request.method == "POST":
@@ -262,6 +275,7 @@ def attribute():
             return f"ERROR {e}"
     else:
         return render_template('ajout.html')
+
 @app.route('/search-admin', methods=['POST', 'GET'])
 def search_admin():
     if session:
@@ -299,6 +313,7 @@ def query(q, service):
     query_obj = query_obj.order_by(Division.nom).order_by(Service.nom).order_by(User.matricule)
     return query_obj
 
+
 @app.route('/search-agent', methods=['POST', 'GET'])
 def search():
     if session:
@@ -320,6 +335,7 @@ def search():
     query_obj = query(search, service)
     results = query_obj.paginate(page=page, per_page=per_page, error_out=False)
     return render_template('search-agent.html', results=results, search=search, user=user)
+
 @app.route('/edit-all/<int:matricule>', methods=['POST', 'GET'])
 def edit_all(matricule):
     matri=session.get('matricule')
@@ -329,6 +345,7 @@ def edit_all(matricule):
             return render_template('edit.html', user=user, matricule=matricule, profil=1)
         return render_template('acces-error.html')
     return render_template('dashboard.html',user=None)
+
 @app.route('/edit-agent/<int:matricule>', methods=['POST', 'GET'])
 def edit_agent(matricule):
     user=User.query.filter_by(matricule=matricule).first()
@@ -339,6 +356,7 @@ def edit_agent(matricule):
         else:
             return render_template('acces-error.html')
     return render_template('dashboard.html', user=None)
+
 @app.route('/edit-pwrd/<int:matricule>', methods=['POST', 'GET'])
 def edit_pwrd(matricule):
     if (matricule==session['matricule']):
@@ -360,6 +378,7 @@ def edit_pwrd(matricule):
         else:
             return render_template('edit-agent.html', user=user)
     return("acces-error.html")
+
 @app.route('/edit/<int:matricule>', methods=['POST', 'GET'])
 def edit(matricule):
     print(f"Edit called for {matricule}, method: {request.method}")
@@ -405,6 +424,7 @@ def edit(matricule):
         else:
             return render_template('edit.html',profil=profil, user=ag)
     return render_template('acces-error.html')
+
 @app.route('/delete/<int:matricule>', methods=['POST', 'GET'])
 def delete(matricule):
     if session and "matricule" in session:
@@ -425,6 +445,7 @@ def delete(matricule):
             print(f"ERROR {e}")
             return render_template("search-admin.html", info_delete=f"Erreur lors de la suppression: {e}", user=admin, results=results)
     return render_template("acces-error.html")
+
 @app.route('/edit-tel', methods=['POST', 'GET'])
 def edit_tel():
     matricule = session.get('matricule')
@@ -447,6 +468,7 @@ def edit_tel():
             return f"ERROR {e}"
     else:
         return render_template("profil.html", user=user)
+
 @app.route('/download', methods=['POST'])
 def download_pdf():
     search = request.form.get('search', '')
@@ -465,6 +487,7 @@ def download_pdf():
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'attachment; filename=results.pdf'
     return response
+
 @app.route('/handle-request/<int:Id>/<string:action>', methods=['GET','POST'])
 def handle_request(Id, action):
     req = Demande.query.get(Id)
@@ -478,7 +501,6 @@ def handle_request(Id, action):
     requests=Demande.query.filter_by(status='pending')
     return render_template("demande.html", info_tel=f"Décision prise: {action}", requests=requests)
 
+
 if __name__ == "__main__":
     app.run(debug=True)
-
-
