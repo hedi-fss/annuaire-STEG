@@ -12,17 +12,22 @@ from datetime import timedelta
 db_path="C:\\Users\\Hedi Moalla\\Desktop\\Stage Juillet 2025\\instance\\users_data.db"
 if not os.path.exists(db_path):
     engine=create_engine("sqlite:///instance/users_data.db")
+    print("Bonjour, bienvenue à l'étape de la création de la base")
+    matri=int(input("Insérer votre matricule:"))
+    nom=input("Insérer votre nom:")
+    tele=int(input("Insérer votre numéro de téléphone:"))
+    mot=input("Insérer votre mot de passe (veuillez respecter les normes de mot de passe solide pour que le programme marche correctement):")
     with engine.begin() as connection:
         connection.execute(text("Create table division ( Id_division number(1) primary key, nom varchar(20) NOT NULL)"))
         connection.execute(text("Create table service ( Id_service number(2) primary key, nom varchar(20) NOT NULL, Id_division number(1) references division(Id_division))"))
         connection.execute(text("Create table user ( matricule number(5) primary key,nom varchar(40) NOT NULL,tel number(8) NOT NULL,password varchar(128) NOT NULL,acces varchar(5) NOT NULL,Id_service number(2)  references service(Id_service))"))
         connection.execute(text("Create table demande ( Id number(5) primary key,tel number(8) NOT NULL,status varchar(10) NOT NULL,matricule number(5)  references user(matricule))"))
-        params=[{'Id_division':1, 'nom': 'Contrôle des opérations'},{'Id_division':2, 'nom': 'Maintenance informatique et réseau'},{'Id_division':3, 'nom':'Édition'},{'Id_division':4, 'nom':'Équipements annexes'}]
+        params=[{'Id_division':1, 'nom': 'Contrôle des opérations'},{'Id_division':2, 'nom': 'Services et réseau'},{'Id_division':3, 'nom':'Édition'},{'Id_division':4, 'nom':'Équipements annexes'}]
         connection.execute(text("Insert into division (Id_division, nom) values(:Id_division, :nom)"),params)
-        params=[{'Id_service':1, 'nom': 'Préparation', 'Id_division':1},{'Id_service':2, 'nom': 'Assistance utilisateurs informatique', 'Id_division':1},{'Id_service':3, 'nom': 'Programmation', 'Id_division':1},{'Id_service':4, 'nom': 'Exploitation', 'Id_division':1},{'Id_service':5, 'nom': 'Maintenance matériel', 'Id_division':2},{'Id_service':6, 'nom': 'Maintenance réseau', 'Id_division':2},{'Id_service':7, 'nom': 'Impression', 'Id_division':3},{'Id_service':8, 'nom': 'Mise sous pli', 'Id_division':3},{'Id_service':9, 'nom': 'Gestion', 'Id_division':4},{'Id_service':10, 'nom': 'Secrétariat', 'Id_division':4}]
+        params=[{'Id_service':1, 'nom': 'Administratif', 'Id_division':1},{'Id_service':2, 'nom': 'Affaires générales', 'Id_division':1},{'Id_service':3, 'nom': 'Maintenance matériel', 'Id_division':2},{'Id_service':4, 'nom': 'Réseau', 'Id_division':2},{'Id_service':5, 'nom': 'Suivi des entretiens', 'Id_division':3},{'Id_service':6, 'nom': 'Sécurité physique', 'Id_division':4}]
         connection.execute(text("Insert into service (Id_service, nom, Id_division) values(:Id_service, :nom, :Id_division)"),params)
-        pwrd=generate_password_hash('Mhedi.56')
-        params={'matricule':10000,'nom':'Hedi Moalla','tel':56443199,'password':pwrd, 'acces':'Administrateur', 'Id_service':4}
+        pwrd=generate_password_hash(mot)
+        params={'matricule':matri,'nom':nom,'tel':tele,'password':pwrd, 'acces':'Administrateur', 'Id_service':1}
         connection.execute(text("Insert into user (matricule, nom, tel, password, acces, Id_service) values(:matricule,:nom,:tel,:password,:acces,:Id_service)"),params)
         connection.execute(text("Insert into demande (Id, tel, status, matricule) values(1,97966166,'refused',1)"))
 
